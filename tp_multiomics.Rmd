@@ -49,8 +49,20 @@ coef_var <- function(vect){
   
   return (mean(vect) / sd(vect))
 }
-
-coef_var(mRNA[,1])
+coeffs <- function( fichier){
+  Coef_var_fichier = NULL
+  for (i in 1:length(fichier)){
+    coef = as.vector(coef_var(fichier[,i]))
+    Coef_var_fichier =c(Coef_var_fichier,coef)
+  
+  }
+  return(Coef_var_fichier)
+}
+hist(coeffs(miRNA))
+hist(coeffs(mRNA))
+hist(coeffs(prot))
 ```
 
+```{r}
+```
 
