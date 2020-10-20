@@ -12,30 +12,35 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Lecture des fichier:
 ```{r}
-miRNA <- read.csv(file = "mirna.csv", header = T, sep ="," )
+miRNA <- read.csv(file = "mirna.csv", header = T, sep ="," ,row.names = 1)
 dim(miRNA)
 ```
-1/ miRNA: on a  150 échantillons , 185 variables
+1/ miRNA: on a  150 échantillons , 184 variables
 
 ```{r}
-mRNA <- read.csv(file = "mrna.csv", header = T, sep ="," )
+mRNA <- read.csv(file = "mrna.csv", header = T, sep =",", row.names = 1 )
 dim(mRNA)
 
 ```
-2/ mRNA: on a  150 échantillons , 201 variables
+2/ mRNA: on a  150 échantillons , 200 variables
 
 
 ```{r}
-prot <- read.csv(file = "protein.csv", header = T, sep ="," )
+prot <- read.csv(file = "protein.csv", header = T, sep =",", row.names = 1 )
 dim(prot)
 
 ```
-3/ prot: on a  150 échantillons , 143 variables
+3/ prot: on a  150 échantillons , 142 variables
 
 ```{r}
-sampl_group <- read.csv(file = "sample_group.csv", header = T, sep ="," )
+sampl_group <- read.csv(file = "sample_group.csv", header = T, sep ="," ,row.names = 1)
 dim(sampl_group)
 
 ```
-4/ sampl_group : on a  150 échantillons , 2 variables
+4/ sampl_group : on a  150 échantillons , 1 variable
+
+```{r}
+
+```
+
 
