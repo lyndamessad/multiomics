@@ -9,58 +9,94 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Consignes
+
+Vous avez jusqu'au 30 Octobre 2020 pour rendre le devoir. Vous devez nous
+remettre un fichier Rmd qui contient les réponses à toutes les questions.
+Vous inclurez également **toutes les commandes** qui vous ont permises de répondre
+aux questions.
+
+N'oubliez pas d'inclure le nom et le prénom de tous les membres de l'équipe.
+
+Vous pouvez nous joindre aux adresses suivantes:
+
+* Arnaud Droit: Arnaud.Droit@crchudequebec.ulaval.ca
+* Antoine Bodein: Antoine.Bodein@crchudequebec.ulaval.ca
+* Charles Joly Beauparlant: Charles.Joly-Beauparlant@crchudequebec.ulaval.ca
+
+## Objectifs
+
+Utiliser les méthodes vu en cours pour intégrer des données multi-omiques.
+Une grande partie du TP est réalisé grâce à la suite d'outils `mixOmics`.
+De l'aide est disponible sur leur site (http://mixomics.org/).
+
+---
+# Partie I
+
+## 0. Préparation
+
+1. Chargez le package `mixOmics`
+
+2. Téléchargez et importez les données (4 fichiers: `mirna.csv`, `mrna.csv`, `protein.csv`, `sample_group.csv`)
+
+**Question 1:** Combien avez-vous d'échantillons ? de variables (mRNA, protéines, miRNA) ?
 
 Lecture des fichier:
 ```{r}
 miRNA <- read.csv(file = "mirna.csv", header = T, sep ="," ,row.names = 1)
 dim(miRNA)
-```
-1/ miRNA: on a  150 échantillons , 184 variables
 
-```{r}
 mRNA <- read.csv(file = "mrna.csv", header = T, sep =",", row.names = 1 )
 dim(mRNA)
 
-```
-2/ mRNA: on a  150 échantillons , 200 variables
-
-
-```{r}
 prot <- read.csv(file = "protein.csv", header = T, sep =",", row.names = 1 )
 dim(prot)
 
-```
-3/ prot: on a  150 échantillons , 142 variables
-
-```{r}
 sampl_group <- read.csv(file = "sample_group.csv", header = T, sep ="," ,row.names = 1)
 dim(sampl_group)
+```
+a/ miRNA: on a  150 échantillons , 184 variables
+b/ mRNA: on a  150 échantillons , 200 variables
+c/ prot: on a  150 échantillons , 142 variables
+d/ sampl_group : on a  150 échantillons , 1 variable
+
+
+3. Le coefficient de variation est défini comme le rapport entre l'écart-type $\sigma$ et la moyenne $\mu$ : $c_v = \frac{\sigma}{\mu}$
+Construisez un fonction qui calcule le coefficient de variation à partir d'un vecteur.
+```{r}
+coef_var = function(vecteur) {
+
+   return(sd(vecteur)/mean(vecteur))
+}
+
+liste_miRNA = apply(miRNA, 2, coef_var) 
+liste_mRNA= apply(mRNA, 2, coef_var)
+liste_prot = apply(prot, 2, coef_var)
 
 ```
-4/ sampl_group : on a  150 échantillons , 1 variable
+
+
+4. A l'aide d'un histogramme `hist()` affichez la distribution de chacun des blocs.
+
+```{r}
+hist(liste_miRNA,col = "blue") 
+hist(liste_mRNA, col = "green") 
+hist(liste_prot, col = "red") 
+```
+
+
+a. Pour les miRNA, on a une abondance plus importante des coeffcients de variation qui entre 0.05 et 0.1. On a 
+b. Pour les mRNA, les coeffcients de variation entre 0.05 et 0.1 sont les plus abondants.
+c. Pour les protéines, les coeffcients de variation entre 0 et 50 sont les plus abondants. 
+.
+--------------------------------------------------------------------------------
+
+**Question 2:** La distribution des coefficients de variation est-elle similaire dans les 3 blocs ?
+Si oui, quel type de donnée possède le plus de variabilité ?
+
 
 ```{r}
 
-# Focntion qui calcul le coefficient de variation
-  # Parametre un vecteur qui correspond à une colone donée.
-  # Return une valeur int ou float
-
-coef_var <- function(vect){
-  
-  return (mean(vect) / sd(vect))
-}
-coeffs <- function( fichier){
-  Coef_var_fichier = NULL
-  for (i in 1:length(fichier)){
-    coef = as.vector(coef_var(fichier[,i]))
-    Coef_var_fichier =c(Coef_var_fichier,coef)
-  
-  }
-  return(Coef_var_fichier)
-}
-hist(coeffs(miRNA))
-hist(coeffs(mRNA))
-hist(coeffs(prot))
 ```
 
 ```{r}
