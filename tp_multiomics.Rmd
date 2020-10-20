@@ -1,0 +1,41 @@
+---
+title: "tp_multi-omics"
+author: "Lynda"
+date: "20/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Lecture des fichier:
+```{r}
+miRNA <- read.csv(file = "mirna.csv", header = T, sep ="," )
+dim(miRNA)
+```
+1/ miRNA: on a  150 échantillons , 185 variables
+
+```{r}
+mRNA <- read.csv(file = "mrna.csv", header = T, sep ="," )
+dim(mRNA)
+
+```
+2/ mRNA: on a  150 échantillons , 201 variables
+
+
+```{r}
+prot <- read.csv(file = "protein.csv", header = T, sep ="," )
+dim(prot)
+
+```
+3/ prot: on a  150 échantillons , 143 variables
+
+```{r}
+sampl_group <- read.csv(file = "sample_group.csv", header = T, sep ="," )
+dim(sampl_group)
+
+```
+4/ sampl_group : on a  150 échantillons , 2 variables
+
