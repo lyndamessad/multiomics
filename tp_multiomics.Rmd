@@ -1,15 +1,17 @@
 ---
 title: "tp_multi-omics"
-author: "Lynda"
+author: "Lynda,Laetitia,Zacks"
 date: "20/10/2020"
 output: html_document
 ---
+
+TRINOME : Zacks Allouche, Laëtitia Hollier, Lynda Messad Dit Mahtal
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Consignes
+## ---- Consignes ----
 
 Vous avez jusqu'au 30 Octobre 2020 pour rendre le devoir. Vous devez nous
 remettre un fichier Rmd qui contient les réponses à toutes les questions.
@@ -24,24 +26,30 @@ Vous pouvez nous joindre aux adresses suivantes:
 * Antoine Bodein: Antoine.Bodein@crchudequebec.ulaval.ca
 * Charles Joly Beauparlant: Charles.Joly-Beauparlant@crchudequebec.ulaval.ca
 
-## Objectifs
+## ---- Objectifs ----
 
 Utiliser les méthodes vu en cours pour intégrer des données multi-omiques.
 Une grande partie du TP est réalisé grâce à la suite d'outils `mixOmics`.
 De l'aide est disponible sur leur site (http://mixomics.org/).
 
 ---
-# Partie I
 
-## 0. Préparation
 
-1. Chargez le package `mixOmics`
+# ===========================================================
+#                           PARTIE 1
+# ===========================================================
+
+
+
+# ----- 0.Préparation -----
+
+1. Chargement du package `mixOmics`
+
+
 
 2. Téléchargez et importez les données (4 fichiers: `mirna.csv`, `mrna.csv`, `protein.csv`, `sample_group.csv`)
-
-**Question 1:** Combien avez-vous d'échantillons ? de variables (mRNA, protéines, miRNA) ?
-
 Lecture des fichier:
+
 ```{r}
 miRNA <- read.csv(file = "mirna.csv", header = T, sep ="," ,row.names = 1)
 dim(miRNA)
@@ -55,25 +63,26 @@ dim(prot)
 sampl_group <- read.csv(file = "sample_group.csv", header = T, sep ="," ,row.names = 1)
 dim(sampl_group)
 ```
+
+# Question1 Combien avez-vous d’échantillons et de variables ? (mRNA, protéines, miRNA) ?
 a/ miRNA: on a  150 échantillons , 184 variables (miRNA).
 b/ mRNA: on a  150 échantillons , 200 variables (genes)
 c/ prot: on a  150 échantillons , 142 variables (protéines)
 d/ sampl_group : on a  150 échantillons , 1 variable
 
 
+
 3. Le coefficient de variation est défini comme le rapport entre l'écart-type $\sigma$ et la moyenne $\mu$ : $c_v = \frac{\sigma}{\mu}$
 Construisez un fonction qui calcule le coefficient de variation à partir d'un vecteur.
-
+Parametre un vecteur qui correspond à une colone donée.
+Return une valeur int ou float
 
 ```{r}
 coef_var = function(vecteur) {
-
    return(sd(vecteur)/mean(vecteur))
 }
-
-
-
 ```
+
 
 4. A l'aide d'un histogramme `hist()` affichez la distribution de chacun des blocs.
 
@@ -89,23 +98,27 @@ vec_mRNA= apply(mRNA, 2, coef_var)
 vec_prot = apply(prot, 2, coef_var)
 ```
 
+Affichage des Histogramme pour chacun des blocs:
 ```{r}
 hist(vec_miRNA,col = "blue") 
 hist(vec_mRNA, col = "green") 
 hist(vec_prot, col = "red") 
 ```
 
-**Question 2:** La distribution des coefficients de variation est-elle similaire dans les 3 blocs ?
-Si oui, quel type de donnée possède le plus de variabilité ?
+# Question 2: La distribution des coefficients de variation est-elle similaire dans les 3 blocs ? 
+# Si oui, quel type de donnée possède le plus de variabilité ?
 
-D'après les représentations des histogrammes, on peut constater que selon les blocs, la distribution n'est pas la même.
-les données de miRNA et mRNA ont toutes les deux un maximum de données avec un coefficient de variation entre 0.5 et 1. 
-Par contre, les données protéines ne suit pas le meme principe. 
+D'après les représentations des histogrammes, on peut constater que selon les blocs, la distribution n'est pas la même
+En effet celles des miRNA et mRNA varient sur un intervalle compris entre 0 et 0.5
+Par contre, les données protéines ne suit pas le meme principe, leur distribution s'effectue sur un intervalle compris entre -100 et +200
 
-a. Pour les miRNA, on a une abondance plus importante des coeffcients de variation qui entre 0.05 et 0.1. On a 
-b. Pour les mRNA, les coeffcients de variation entre 0.05 et 0.1 sont les plus abondants.
+a. Pour les miRNA, on a une abondance plus importante des coeffcients de variation qui entre 0.05 et 0.15. 
+b. Pour les mRNA, les coeffcients de variation entre 0.15 et 0.25 sont les plus abondants.
 c. Pour les protéines, les coeffcients de variation entre 0 et 50 sont les plus abondants. 
-.
+
+
+
+Cette variabilité peut également se vérifier en observant la variance de chacun des vecteurs vec_miRNA, vec_mRNA et vec_prot.
 ```{r}
 var(vec_miRNA)
 var(vec_mRNA)
@@ -122,7 +135,8 @@ mRNA_filtre = mRNA[,names(which(abs(apply(mRNA, 2, coef_var))>=0.15))]
 prot_filtre = prot[,names(which(abs(apply(prot, 2, coef_var))>=0.15))]
 ```
 
-**Question 3:**: Combien reste-il de gènes ? de protéines ? de miRNA ?
+
+# Question 3:: Combien reste-il de gènes ? de protéines ? de miRNA ?
 ```{r}
 dim(miRNA_filtre)
 dim(mRNA_filtre)
@@ -137,19 +151,31 @@ Aprés filtrage des |cv| > 0.15, on trouve:
 On conclu donc que pour les protéines toutes les variables on un |cv| > 0.15.
 
 
-**Question 4:** Quel est le gène le plus variant ? La protéine associé à ce gène est-elle présente dans le jeu de donnée.
+# Question 4: Quel est le gène le plus variant ? La protéine associé à ce gène est-elle présente dans le jeu de donnée.
 ```{r}
 gene_plus_variant = vec_mRNA[which(vec_mRNA==max(vec_mRNA))]
 sprintf("gene plus variant est le :")  
 gene_plus_variant
-```
-Le gene le plus variant est "PLCD4
-**Question 5:** A l'aide des bases de donnée de votre choix répondez aux questions suivantes:
-```{r}
 
+# Dans Uniprot, le gène PLCD4 est associé à la protéine hPLCD4
+# On recherche dans la base de données prot_filtre pour savoir si on retrouve cette protéine ou non
+print(prot_filtre[,"hPLCD4"])
 ```
 
- * Quel est le rôle de ce gène ? 
- * Sur quel chromosome est-il localisé ? 
- * Quelle est la longueur en nucléotide de sa séquence ?
- * Quelle est la longueur en acides aminés de la protéine associée (ou des isoformes) ?
+
+# Question 5: A l’aide des bases de donnée de votre choix répondez aux questions suivantes:
+# • Quel est le rôle de ce gène ?
+https://www.uniprot.org/uniprot/Q9BRC7#function
+https://www.genecards.org/cgi-bin/carddisp.pl?gene=PLCD4
+
+Son rôle est de coder pour un membre de la classe delta des enzymes phospholipases C. Celles-ci possède un rôle important dans plusieurs processus cellulaires. Elles hydrolysent le phosphatidylinositol 4,5-bisphosphate en deux seconds messagers intracellulaires, l'inositol 1,4,5-trisphosphate et le diacylglycérol. 
+D'après de nombreuses recherches, ce gène pourrait être impliqué dans le maladies cancéreuses 
+
+# • Sur quel chromosome est-il localisé ?
+Sur le chromosome 2
+# • Quelle est la longueur en nucléotide de sa séquence ?
+Size: 762 amino acids
+# • Quelle est la longueur en acides aminés de la protéine associée (ou des isoformes) ?
+
+
+
