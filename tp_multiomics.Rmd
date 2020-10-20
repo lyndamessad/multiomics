@@ -41,6 +41,16 @@ dim(sampl_group)
 
 ```{r}
 
+# Focntion qui calcul le coefficient de variation
+  # Parametre un vecteur qui correspond à une colone donée.
+  # Return une valeur int ou float
+
+coef_var <- function(vect){
+  
+  return (mean(vect) / sd(vect))
+}
+
+coef_var(mRNA[,1])
 ```
 
 
