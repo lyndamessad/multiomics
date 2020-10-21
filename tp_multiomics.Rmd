@@ -198,16 +198,16 @@ Cette méthode est beaucoup utilitée pour des données multivariées. Ce pendan
 #install.packages("FactoMineR")
 #install.packages("factoextra")
 
-library("FactoMineR")
-library("factoextra")
+#library("FactoMineR")
+#library("factoextra")
 library("tidyverse")
-library("timeOmics")
-
+#library("timeOmics")
+library(mixOmics)
 ```
 
 ```{r}
-mRNA_pca = PCA(mRNA_filtre, scale.unit = TRUE)
-get_eigenvalue(mRNA_pca)
+mRNA_pca = pca(mRNA_filtre, scale = TRUE)
+mRNA_pca
 #mRNA_pca$eig
 ```
 
@@ -225,8 +225,8 @@ Si on fixe un seuil à 50%, avec le meme raisonnement on s'arrete à la 6eme dim
 
 ```{r}
 # pour 50%  ----> dimension = 6
-mRNA_pca = PCA(mRNA_filtre, scale.unit = TRUE, ncp = 6)
-get_eigenvalue(mRNA_pca)
+mRNA_pca = pca(mRNA_filtre, scale = TRUE, ncomp = 6)
+
 plot.PCA(mRNA_pca, axes=c(1, 2))
 
 ```
@@ -234,16 +234,36 @@ plot.PCA(mRNA_pca, axes=c(1, 2))
 
 **Question 8:** Quelles sont les variables qui contribuent le plus à l'axe 1 ?
 ```{r}
+#methode 1
 var_dim1 = mRNA_pca$var$contrib[,1][which(mRNA_pca$var$contrib[,1] > 1)]
 var_dim1
-data()
-print(spca(as.matrix(mRNA_filtre),  ncomp = 1))
+#methode 2
+#B= spca(mRNA_filtre,  ncomp = 1)
+#selectVar(B)
+spca.result <- spca(mRNA_filtre, ncomp = 1, center = TRUE, scale = TRUE, 
+                    keepX = 10)
+#spca.result
+
+selectVar(spca.result, comp = 1)$value
+
+
 ```
 
 3. Avec un graphique, représenter les échantillons dans l'espace formé par les composantes. 
 Les échantillons sont colorés en fonction du groupe. Affichez la légende et ajoutez un titre.
+```{r}
+plotIndiv(mRNA_pca, group = sampl_group$Y, legend = TRUE, title = 'PCA, ggplot')
+```
 
 4. La *sparse ACP* `spca()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la `spca()` de manière a sélectionner 10 gènes sur la première composante et 5 gènes sur la seconde composante.
+```{r}
+spca.result <- spca(mRNA_filtre, ncomp = 2, center = TRUE, scale = TRUE, 
+                    keepX = c(10, 5))
+#spca.result
+
+selectVar(spca.result, comp = 1)$value
+selectVar(spca.result, comp = 2)$value
+```
 
 **Question 9:** Quelles sont les gènes que vous avez sélectionnés? *(une fonction est disponible)*
 
