@@ -30,12 +30,18 @@ Utiliser les méthodes vu en cours pour intégrer des données multi-omiques.
 Une grande partie du TP est réalisé grâce à la suite d'outils `mixOmics`.
 De l'aide est disponible sur leur site (http://mixomics.org/).
 
----
-# Partie I
 
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------
+# ===========================================================
+#                           PARTIE I
+# ===========================================================
 ## 0. Préparation
 
 1. Chargez le package `mixOmics`
+```{r}
+library("mixOmics")
+
+```
 
 2. Téléchargez et importez les données (4 fichiers: `mirna.csv`, `mrna.csv`, `protein.csv`, `sample_group.csv`)
 
@@ -102,7 +108,7 @@ D'après les représentations des histogrammes, on peut constater que selon les 
 les données de miRNA et mRNA ont toutes les deux un maximum de données avec un coefficient de variation entre 0.5 et 1. 
 Par contre, les données protéines ne suit pas le meme principe. 
 
-a. Pour les miRNA, on a une abondance plus importante des coeffcients de variation qui entre 0.05 et 0.1. On a 
+a. Pour les miRNA, on a une abondance plus importante des coeffcients de variation qui entre 0.05 et 0.1. 
 b. Pour les mRNA, les coeffcients de variation entre 0.05 et 0.1 sont les plus abondants.
 c. Pour les protéines, les coeffcients de variation entre 0 et 50 sont les plus abondants. 
 .
@@ -143,13 +149,152 @@ gene_plus_variant = vec_mRNA[which(vec_mRNA==max(vec_mRNA))]
 sprintf("gene plus variant est le :")  
 gene_plus_variant
 ```
-Le gene le plus variant est "PLCD4
+Le gene le plus variant est "PLCD4"
+
 **Question 5:** A l'aide des bases de donnée de votre choix répondez aux questions suivantes:
 ```{r}
-
+prot_filtre[,"PLCD4"]
 ```
 
  * Quel est le rôle de ce gène ? 
  * Sur quel chromosome est-il localisé ? 
  * Quelle est la longueur en nucléotide de sa séquence ?
  * Quelle est la longueur en acides aminés de la protéine associée (ou des isoformes) ?
+ 
+ 
+ https://www.uniprot.org/uniprot/Q9BRC7#function
+https://www.genecards.org/cgi-bin/carddisp.pl?gene=PLCD4
+
+Son rôle est de coder pour un membre de la classe delta des enzymes phospholipases C. Celles-ci possède un rôle important dans plusieurs processus cellulaires. Elles hydrolysent le phosphatidylinositol 4,5-bisphosphate en deux seconds messagers intracellulaires, l'inositol 1,4,5-trisphosphate et le diacylglycérol. 
+D'après de nombreuses recherches, ce gène pourrait être impliqué dans le maladies cancéreuses 
+
+ 
+ 
+ 
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------
+ # ===========================================================
+#                         Partie II
+# ===========================================================
+
+
+## 1. Single-omic: l'ACP avec `mixOmics`
+
+**Question 6:** A quoi sert l'Analyse en Composante Principale ? Expliquez brievement sont fonctionnement ?
+L’ analyse en composantes principales (ACP) , ou principal component analysis (PCA) en anglais, est une méthode statistique qui permet d’analyser et de visualiser un jeu de données a condition que celui-ci présente des variables quantitatives qui le decrive.
+
+Cette méthode est beaucoup utilitée pour des données multivariées. Ce pendant, les données doivent etre normalisées pour éviter que le résultat ne soit fausser par le poids d'une variables tres abondante par rapport aux autres variables.
+
+1. Réaliser l'ACP sur les données mRNA.
+```{r}
+#install.packages("FactoMineR")
+#install.packages("factoextra")
+
+library("FactoMineR")
+library("factoextra")
+library("tidyverse")
+library("timeOmics")
+
+```
+```{r}
+mRNA_pca = PCA(mRNA_filtre, scale.unit = TRUE, ncp = 5)
+
+mRNA_pca$
+get_eigenvalue(mRNA_pca)
+```
+
+**Question 7:** Combien de composantes retenez-vous ? Justifiez / Illustrez
+
+2. Après avoir relancer l'ACP avec le bon nombre de composante, utiliser un graphique pour représenter les variables.
+
+**Question 8:** Quelles sont les variables qui contribuent le plus à l'axe 1 ?
+
+3. Avec un graphique, représenter les échantillons dans l'espace formé par les composantes. 
+Les échantillons sont colorés en fonction du groupe. Affichez la légende et ajoutez un titre.
+
+4. La *sparse ACP* `spca()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la `spca()` de manière a sélectionner 10 gènes sur la première composante et 5 gènes sur la seconde composante.
+
+**Question 9:** Quelles sont les gènes que vous avez sélectionnés? *(une fonction est disponible)*
+
+
+## 2. Projection on Latent Structures
+
+1. Réalisez une PLS `pls()` avec les données mRNA et protéines en incluant 3 composantes `(ncomp = 3)`.
+
+**Question 10:** A quoi sert la régression PLS pour l'intégration multi-omique?
+
+2. Affichez un *scatter plot* des échantillons en affichant uniquement les composantes 2 et 3.
+Les échantillons doivent être coloriés par groupe. Ajoutez une légende et un titre.
+
+3. Affichez un *arrow plot* en affichant uniquement les composantes 1 et 3.
+Les flèches doivent être coloriés par groupe. Ajoutez une légende et un titre.
+
+4. La *sparse PLS* `spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la *sPLS* de manière a sélectionner (10 gènes, 9 protéines) sur la première composante, (5 gènes, 5 protéines) sur la seconde composante et (1 gène, 1 protéine) sur la troisième composante.
+
+**Question 11:** Quels sont les variables sélectionnées sur la troisième composante.
+
+5. Affichez un *CIM plot* à partir du modèle *sPLS*.
+
+**Question 12:** Quels sont les gènes et les protéines les plus corrélés? Justifiez à partir de la matrice de corrélation calculée par `cim()`.
+
+6. Toujours à partir du même modèle *sPLS*, affichez un *network plot* en affichant uniquement les les corrélations les plus forte $(\rho \pm 0.65)$.
+
+**Question 13:** Combien de clusters / sous-graphes observés vous ?
+
+## 2. *multiblock* Projection on Latent Structures
+
+1. Réalisez une multiblock PLS `pls()` avec les données mRNA, protéines et miRNA `(X = list(mrna, prot), Y = mirna)` en incluant 2 composantes `(ncomp = 2)`.
+
+2. Comme la `spls()`, la `block.spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la fonction de manière a sélectionner (10 gènes, 9 protéines, 7 miRNA) sur la première composante et (5 gènes, 4 protéines, 3 miRNA) sur la seconde composante.
+
+**Question 14:** Quels sont les variables sélectionnées sur la première composante.
+
+## 3. Analyse supervisée : (s)PLS-DA
+
+Le fichier `sample_groupe.csv` associe un groupe à chaque échantillon.
+
+**Question 15:** Donnez la répartition des groupes.
+
+1. Utilisez la `pls.da()` en utilisant les gènes (`X`) et le groupe (`Y`) avec 2 composantes.
+
+2. Affichez le graphe des échantillons.
+
+**Question 16:** Comparez ce graphe avec le graphe des échantillons obtenu avec l'ACP (1.3). Quel méthode permet d'obtenir de meilleurs clusters?
+
+## 4. Analyse supervisée : block-(s)PLS-DA
+
+1. Réalisez une multiblock sPLS-DA `block.splsda()` avec les données mRNA, protéines, miRNA `(X = list(mrna, prot, mirna))` et le groupe en incluant 5 composantes `(ncomp = 5)`.
+
+2. Utiliser la fonction `perf()` sur le modèle obtenu. 
+
+**Question 17:** Quelle serait le nombre de composante minimal à inclure ?
+
+3. Relancez le modèle avec 2 composantes et utilisez l'option `keepX` pour sélectionner 15 gènes, protéines et miRNA sur la première compoante et 10 gènes, protéines et miRNA sur la seconde composante.
+
+4. Réalisez un *circos plot* avec le modèle obtenu en affichant les corrélations fortes $|\rho| > 0.5$. Ajoutez un titre.
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------
+ # ===========================================================
+#                         Partie III
+# ===========================================================
+
+
+## 5. Mises en situation
+
+Dans cette section, nous allons vous présenter deux designs expérimentaux et il
+vous faudra déterminer quelle est l'approche analytique à privilégier pour
+répondre aux questions demandées. Il s'agit d'intégrer à la fois l'informations
+sur l'analyse bioinformatique en partant des données brutes mais également de
+cibler les bonnes approches multiomiques.
+
+1. Un de vos collègue s'intéresse aux effets de l'exposition à des polluants
+   sur la santé des ours polaires. Pour ce faire, il a accès à des données
+   transcriptomiques provenant d'une vingtaine de trios (un mère et sa portée
+   de deux enfants) ainsi qu'à diverses mesures cliniques numériques pour tous
+   les échantillons.
+
+2. Vous travaillez sur un modèle murin et vous souhaitez comprendre les impacts
+   d'un traitement sur le microbiote. Vous avez accès à des données de
+   séquençage de type 16S ainsi qu'à des données de métabolomiques pour des
+   souris traitées et pour des souris non-traitées. Vous pouvez prendre pour
+   acquis que l'analyse primaire des données de métabolomiques a déjà été
+   complétées et que vous avez déjà accès aux décomptes pour chaque molécules.
