@@ -151,16 +151,13 @@ gene_plus_variant
 ```
 Le gene le plus variant est "PLCD4"
 
-**Question 5:** A l'aide des bases de donnée de votre choix répondez aux questions suivantes:
 ```{r}
 prot_filtre[,"HPLCD4"]
 ```
 
- * Quel est le rôle de ce gène ? 
- * Sur quel chromosome est-il localisé ? 
- * Quelle est la longueur en nucléotide de sa séquence ?
- * Quelle est la longueur en acides aminés de la protéine associée (ou des isoformes) ?
- 
+**Question 5:** A l'aide des bases de donnée de votre choix répondez aux questions suivantes:
+
+# * Quel est le rôle de ce gène ? 
  
 https://www.uniprot.org/uniprot/Q9BRC7#function
 https://www.genecards.org/cgi-bin/carddisp.pl?gene=PLCD4
@@ -184,13 +181,13 @@ Size: 762 amino acids
 # ===========================================================
 
 
-## 1. Single-omic: l'ACP avec `mixOmics`
+## ------- 1. Single-omic: l'ACP avec `mixOmics` -------------------
 
 **Question 6:** A quoi sert l'Analyse en Composante Principale ? Expliquez brievement sont fonctionnement ?
 
 L’ analyse en composantes principales (ACP) , ou principal component analysis (PCA) en anglais, est une méthode statistique qui permet d’analyser et de visualiser un jeu de données a condition que celui-ci présente des variables quantitatives qui le decrive.
 
-Cette méthode est beaucoup utilitée pour des données multivariées. Ce pendant, les données doivent etre normalisées pour éviter que le résultat ne soit fausser par le poids d'une variables tres abondante par rapport aux autres variables.
+Cette méthode est beaucoup utilitée pour des données multivariées. Cependant, les données doivent etre normalisées pour éviter que le résultat ne soit fausser par le poids d'une variables tres abondante par rapport aux autres variables.
 
 
 1. Réaliser l'ACP sur les données mRNA.
@@ -268,7 +265,7 @@ selectVar(spca.result, comp = 2)$value
 **Question 9:** Quelles sont les gènes que vous avez sélectionnés? *(une fonction est disponible)*
 
 
-## 2. Projection on Latent Structures
+## ------- 2. Projection on Latent Structures -------------------
 
 1. Réalisez une PLS `pls()` avec les données mRNA et protéines en incluant 3 composantes `(ncomp = 3)`.
 
@@ -292,7 +289,7 @@ Les flèches doivent être coloriés par groupe. Ajoutez une légende et un titr
 
 **Question 13:** Combien de clusters / sous-graphes observés vous ?
 
-## 2. *multiblock* Projection on Latent Structures
+## ------- 2. *multiblock* Projection on Latent Structures -------------------
 
 1. Réalisez une multiblock PLS `pls()` avec les données mRNA, protéines et miRNA `(X = list(mrna, prot), Y = mirna)` en incluant 2 composantes `(ncomp = 2)`.
 
@@ -300,7 +297,7 @@ Les flèches doivent être coloriés par groupe. Ajoutez une légende et un titr
 
 **Question 14:** Quels sont les variables sélectionnées sur la première composante.
 
-## 3. Analyse supervisée : (s)PLS-DA
+## ------- 3. Analyse supervisée : (s)PLS-DA -------------------
 
 Le fichier `sample_groupe.csv` associe un groupe à chaque échantillon.
 
@@ -312,7 +309,7 @@ Le fichier `sample_groupe.csv` associe un groupe à chaque échantillon.
 
 **Question 16:** Comparez ce graphe avec le graphe des échantillons obtenu avec l'ACP (1.3). Quel méthode permet d'obtenir de meilleurs clusters?
 
-## 4. Analyse supervisée : block-(s)PLS-DA
+## ------- 4. Analyse supervisée : block-(s)PLS-DA -------------------
 
 1. Réalisez une multiblock sPLS-DA `block.splsda()` avec les données mRNA, protéines, miRNA `(X = list(mrna, prot, mirna))` et le groupe en incluant 5 composantes `(ncomp = 5)`.
 
@@ -325,7 +322,7 @@ Le fichier `sample_groupe.csv` associe un groupe à chaque échantillon.
 4. Réalisez un *circos plot* avec le modèle obtenu en affichant les corrélations fortes $|\rho| > 0.5$. Ajoutez un titre.
 
  -----------------------------------------------------------------------------------------------------------------------------------------------------------
- # ===========================================================
+# ===========================================================
 #                         Partie III
 # ===========================================================
 
