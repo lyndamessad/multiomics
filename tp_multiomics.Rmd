@@ -182,7 +182,7 @@ Size: 762 amino acids
 # ===========================================================
 
 
-## ------- 1. Single-omic: l'ACP avec `mixOmics` -------------------
+## ------- 1. Single-omic: l'ACP avec `mixOmics` -------------------------------
 
 **Question 6:** A quoi sert l'Analyse en Composante Principale ? Expliquez brievement sont fonctionnement ?
 
@@ -199,14 +199,27 @@ library("mixOmics")
 ```
 
 ```{r}
-mRNA_pca = pca(mRNA_filtre, scale = TRUE,  ncomp = 6)
-mRNA_pca$cum.var
-#mRNA_pca$eig
+mRNA_pca = pca(mRNA_filtre, scale = TRUE,  ncomp = 20)
 ```
 
+
 **Question 7:** Combien de composantes retenez-vous ? Justifiez / Illustrez
+```{r}
+mRNA_pca$cum.var
+```
 
 Si on fixe un seuil à 50% de représentation des données. On s'arrete à la 6eme dimension.
+justification: 
+-------------
+Les composants de la pca représentent les données de façon decroissante. En effet, les données sont représenté pour la majorité 
+par le CP1, puis la CP2 améliore la représentation ainsi de suite jusqu'à atteindre une représentation de 100% des données.
+
+Dans notre PCA, le seuil de 50% est atteint au bout de la CP6 (6eme dimension). 
+Un seuil de 70% est atteint au bout de la CP18.
+
+Pour la suite du TP, on choisis dans un premier lieu le seuil de 50% de la représentation des données.
+Si le résultat n'est pas satisfaisant, on passera alors à un seuil de 70% de la représentation des données.
+
 
 2. Après avoir relancer l'ACP avec le bon nombre de composante, utiliser un graphique pour représenter les variables.
 
@@ -214,48 +227,57 @@ Si on fixe un seuil à 50% de représentation des données. On s'arrete à la 6e
 # pour 50%  ----> dimension = 6
 mRNA_pca = pca(mRNA_filtre, scale = TRUE, ncomp = 6)
 
-plotIndiv(mRNA_pca, legend = TRUE, title = '')
+plotIndiv(mRNA_pca, col = "blue", title = 'Representation graphique de la PCA (ncomp = 6)')
 
 ```
 
 
 **Question 8:** Quelles sont les variables qui contribuent le plus à l'axe 1 ?
 ```{r}
-#methode 1
-#var_dim1 = mRNA_pca$var$contrib[,1][which(mRNA_pca$var$contrib[,1] > 1)]
-#var_dim1
-#methode 2
-#B= spca(mRNA_filtre,  ncomp = 1)
-#selectVar(B)
-spca.result <- spca(mRNA_filtre, ncomp = 1, center = TRUE, scale = TRUE, 
-                    keepX = 10)
+spca.result <- spca(mRNA_filtre, ncomp = 1, center = TRUE, scale = TRUE
+                    )
+spca.result$rotation
 #spca.result
+selectVar(spca.result, comp = 1)$value #valeurs
 
-selectVar(spca.result, comp = 1)$value
+selectVar(spca.result, comp = 1)$name #noms
+
+dim1_var = selectVar(spca.result, comp = 1)$name[which((selectVar(spca.result, comp = 1)$value) > 0)]
+dim1_var
 
 
 ```
+On a 99 variables qui contribuent le plus à l'axe 1. 
+Ceux qui contribuent le plus est le gene "ZNF552"(value.var: 0.1371904005), puis "C4orf34" (value.var :0.1371892255).
+celui qui contribu le moin est le gene "MXI1"(value.var: 0.0001037394)
+
 
 3. Avec un graphique, représenter les échantillons dans l'espace formé par les composantes. 
 Les échantillons sont colorés en fonction du groupe. Affichez la légende et ajoutez un titre.
 ```{r}
-plotIndiv(mRNA_pca, group = sampl_group$Y, legend = TRUE, title = 'PCA, ggplot')
+plotIndiv(mRNA_pca, group = sampl_group$Y, legend = TRUE, title = 'PCA by Group', ellipse = TRUE, col = c("red", "blue", "darkgreen"))
 ```
 
 4. La *sparse ACP* `spca()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la `spca()` de manière a sélectionner 10 gènes sur la première composante et 5 gènes sur la seconde composante.
 ```{r}
 spca.result <- spca(mRNA_filtre, ncomp = 2, center = TRUE, scale = TRUE, 
                     keepX = c(10, 5))
-#spca.result
-
 selectVar(spca.result, comp = 1)$value
 selectVar(spca.result, comp = 2)$value
+
 ```
+
 
 **Question 9:** Quelles sont les gènes que vous avez sélectionnés? *(une fonction est disponible)*
 
+Pour la CP1, les 10 genes qui selectionnés sont: 
+KDM4B, ZNF552, PREX1, TTC39A, STC2, LRIG1, C4orf34, MTL5, FUT8, SLC19A2	
 
-## ------- 2. Projection on Latent Structures -------------------
+Pour CP2, les 5 genes selectionnés  spnt:
+APBB1IP, NCF4,	FLI1, C1orf162, CSF1R
+
+
+## ------- 2. Projection on Latent Structures ----------------------------------
 
 1. Réalisez une PLS `pls()` avec les données mRNA et protéines en incluant 3 composantes `(ncomp = 3)`.
 
@@ -312,9 +334,9 @@ Le fichier `sample_groupe.csv` associe un groupe à chaque échantillon.
 4. Réalisez un *circos plot* avec le modèle obtenu en affichant les corrélations fortes $|\rho| > 0.5$. Ajoutez un titre.
 
  -----------------------------------------------------------------------------------------------------------------------------------------------------------
-# ===========================================================
+# =============================================================================
 #                         Partie III
-# ===========================================================
+# =============================================================================
 
 
 ## 5. Mises en situation
