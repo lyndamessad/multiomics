@@ -192,31 +192,20 @@ Cette méthode est beaucoup utilitée pour des données multivariées. Cependant
 
 1. Réaliser l'ACP sur les données mRNA.
 ```{r}
-#install.packages("FactoMineR")
-#install.packages("factoextra")
-
-#library("FactoMineR")
-#library("factoextra")
 library("tidyverse")
 #library("timeOmics")
-library(mixOmics)
+library("mixOmics")
 ```
 
 ```{r}
-mRNA_pca = pca(mRNA_filtre, scale = TRUE)
-mRNA_pca
+mRNA_pca = pca(mRNA_filtre, scale = TRUE,  ncomp = 6)
+mRNA_pca$cum.var
 #mRNA_pca$eig
 ```
 
 **Question 7:** Combien de composantes retenez-vous ? Justifiez / Illustrez
 
-Si on fixe le seuil d'explication des données à 70%, on s'arrete donc à la 19eme composante.
-On regarde donc la 3eme colonne des eigenvalue qui correspond à cumulative.variance.percent.
-il s'agit de la somme des pourcentages de variance  de chaque composant et des précédentes. 
-
-Au bout de la 19eme composante, on atteint  une représentation de 70% des données. 
-
-Si on fixe un seuil à 50%, avec le meme raisonnement on s'arrete à la 6eme dimension.
+Si on fixe un seuil à 50% de représentation des données. On s'arrete à la 6eme dimension.
 
 2. Après avoir relancer l'ACP avec le bon nombre de composante, utiliser un graphique pour représenter les variables.
 
@@ -224,7 +213,7 @@ Si on fixe un seuil à 50%, avec le meme raisonnement on s'arrete à la 6eme dim
 # pour 50%  ----> dimension = 6
 mRNA_pca = pca(mRNA_filtre, scale = TRUE, ncomp = 6)
 
-plot.PCA(mRNA_pca, axes=c(1, 2))
+plotIndiv(mRNA_pca, legend = TRUE, title = '')
 
 ```
 
@@ -232,8 +221,8 @@ plot.PCA(mRNA_pca, axes=c(1, 2))
 **Question 8:** Quelles sont les variables qui contribuent le plus à l'axe 1 ?
 ```{r}
 #methode 1
-var_dim1 = mRNA_pca$var$contrib[,1][which(mRNA_pca$var$contrib[,1] > 1)]
-var_dim1
+#var_dim1 = mRNA_pca$var$contrib[,1][which(mRNA_pca$var$contrib[,1] > 1)]
+#var_dim1
 #methode 2
 #B= spca(mRNA_filtre,  ncomp = 1)
 #selectVar(B)
