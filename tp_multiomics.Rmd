@@ -39,8 +39,9 @@ De l'aide est disponible sur leur site (http://mixomics.org/).
 
 1. Chargez le package `mixOmics`
 ```{r}
-library("mixOmics")
-
+if (!require("mixOmics")) install.packages("mixOmics")
+#Note: rgl installation failed-- installed XQuartz for X11
+#https://www.xquartz.org/
 ```
 
 2. Téléchargez et importez les données (4 fichiers: `mirna.csv`, `mrna.csv`, `protein.csv`, `sample_group.csv`)
@@ -76,7 +77,6 @@ coef_var = function(vecteur) {
 
    return(sd(vecteur)/mean(vecteur))
 }
-
 
 
 ```
