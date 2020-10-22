@@ -1,7 +1,7 @@
 <<<<<<< HEAD
 ---
 title: "tp_multi-omics"
-author: "Lynda"
+author: "Lynda, Laetitia et Zachary"
 date: "20/10/2020"
 output: html_document
 ---
@@ -77,9 +77,6 @@ coef_var = function(vecteur) {
 
    return(sd(vecteur)/mean(vecteur))
 }
-
-
-
 ```
 
 4. A l'aide d'un histogramme `hist()` affichez la distribution de chacun des blocs.
@@ -200,12 +197,14 @@ library("mixOmics")
 
 ```{r}
 mRNA_pca = pca(mRNA_filtre, scale = TRUE,  ncomp = 20)
+#plot(mRNA_pca)
 ```
-
 
 **Question 7:** Combien de composantes retenez-vous ? Justifiez / Illustrez
 ```{r}
 mRNA_pca$cum.var
+plot(mRNA_pca)
+
 ```
 
 Si on fixe un seuil à 50% de représentation des données. On s'arrete à la 6eme dimension.
@@ -234,10 +233,9 @@ plotIndiv(mRNA_pca, col = "blue", title = 'Representation graphique de la PCA (n
 
 **Question 8:** Quelles sont les variables qui contribuent le plus à l'axe 1 ?
 ```{r}
-spca.result <- spca(mRNA_filtre, ncomp = 1, center = TRUE, scale = TRUE
-                    )
-spca.result$rotation
-#spca.result
+spca.result <- spca(mRNA_filtre, ncomp = 1, center = TRUE, scale = TRUE)
+#
+
 selectVar(spca.result, comp = 1)$value #valeurs
 
 selectVar(spca.result, comp = 1)$name #noms
@@ -255,7 +253,9 @@ celui qui contribu le moin est le gene "MXI1"(value.var: 0.0001037394)
 3. Avec un graphique, représenter les échantillons dans l'espace formé par les composantes. 
 Les échantillons sont colorés en fonction du groupe. Affichez la légende et ajoutez un titre.
 ```{r}
-plotIndiv(mRNA_pca, group = sampl_group$Y, legend = TRUE, title = 'PCA by Group', ellipse = TRUE, col = c("red", "blue", "darkgreen"))
+plotIndiv(mRNA_pca, group = sampl_group$Y,
+          legend = TRUE, title = 'PCA by Group',
+          ellipse = TRUE, col = c("red", "blue", "darkgreen"))
 ```
 
 4. La *sparse ACP* `spca()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la `spca()` de manière a sélectionner 10 gènes sur la première composante et 5 gènes sur la seconde composante.
@@ -277,61 +277,146 @@ Pour CP2, les 5 genes selectionnés  spnt:
 APBB1IP, NCF4,	FLI1, C1orf162, CSF1R
 
 
-## ------- 2. Projection on Latent Structures ----------------------------------
+## ------- 2. Projection on Latent Structures -----------------------------------------------------------------------------------------------------------------------------
 
 1. Réalisez une PLS `pls()` avec les données mRNA et protéines en incluant 3 composantes `(ncomp = 3)`.
+```{r}
+pls_rna_prot =pls(X =mRNA_filtre ,Y =prot_filtre ,ncomp = 3, scale = T, mode = "regression")
+pls_rna_prot
+```
 
 **Question 10:** A quoi sert la régression PLS pour l'intégration multi-omique?
-
+****************************
 2. Affichez un *scatter plot* des échantillons en affichant uniquement les composantes 2 et 3.
 Les échantillons doivent être coloriés par groupe. Ajoutez une légende et un titre.
+```{r}
+plotIndiv(pls_rna_prot,group =  sampl_group$Y, ellipse = TRUE, col = c("red", "blue", "darkgreen"), style = "ggplot2", comp = c(2,3),legend = TRUE, title = 'Individu Scatter plot colored by group, composante 2 and 3')
+```
 
 3. Affichez un *arrow plot* en affichant uniquement les composantes 1 et 3.
 Les flèches doivent être coloriés par groupe. Ajoutez une légende et un titre.
+```{r}
+plotArrow(pls_rna_prot, comp = c(1,3),
+          group = sampl_group$Y, 
+          legend = TRUE,
+          X.label = "PLS comp1",
+          Y.label = "PLS comp3",
+          title = "Arrow plot of mRNA and protein PLS"
+          )
+```
 
-4. La *sparse PLS* `spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la *sPLS* de manière a sélectionner (10 gènes, 9 protéines) sur la première composante, (5 gènes, 5 protéines) sur la seconde composante et (1 gène, 1 protéine) sur la troisième composante.
+4. La *sparse PLS* `spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la *sPLS* de manière a sélectionner:
+(10 gènes, 9 protéines) sur la première composante, 
+(5 gènes, 5 protéines) sur la seconde composante et 
+(1 gène, 1 protéine) sur la troisième composante.
+```{r}
+RNA_prot.spls =spls(X= mRNA_filtre, Y = prot_filtre, ncomp = 3, 
+                    mode = "regression", scale = TRUE, keepX = c(10,5,1),keepY = c(9,5,1))
+RNA_prot.spls
+```
 
 **Question 11:** Quels sont les variables sélectionnées sur la troisième composante.
+```{r}
+#(1 gène, 1 protéine) sur la troisième composante.
+plotLoadings(RNA_prot.spls, comp = 3, title = "spls, comp3", size.name = 0.8)
+```
 
 5. Affichez un *CIM plot* à partir du modèle *sPLS*.
+```{r}
+# se sauvegarde automatique dans le repertiore courant
+
+cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)" ,save = 'jpeg', name.save = 'sPLScim')  
+#Si non  a exécuter  sur la console, soucis de marges
+```
 
 **Question 12:** Quels sont les gènes et les protéines les plus corrélés? Justifiez à partir de la matrice de corrélation calculée par `cim()`.
+```{r}
+#table de correlation
 
-6. Toujours à partir du même modèle *sPLS*, affichez un *network plot* en affichant uniquement les les corrélations les plus forte $(\rho \pm 0.65)$.
+correlation = cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)")$mat.co
+correlation
+```
+
+6. Toujours à partir du même modèle *sPLS*, affichez un *network plot* en affichant uniquement les les corrélations les plus forte $(+- 0.65)$.
+```{r}
+network(RNA_prot.spls, block.var.names = name, cutoff =0.63, save = 'jpeg', name.save = 'sPLSnetwork') #tout le network +++ a affihcer sur la console 
+# se sauvegarde automatique dans le repertiore courant
+
+```
 
 **Question 13:** Combien de clusters / sous-graphes observés vous ?
+```{r}
+# pour moi on a deux cluster (voir les couleurs, rouge et noire)
+```
 
 ## ------- 2. *multiblock* Projection on Latent Structures -------------------
 
 1. Réalisez une multiblock PLS `pls()` avec les données mRNA, protéines et miRNA `(X = list(mrna, prot), Y = mirna)` en incluant 2 composantes `(ncomp = 2)`.
+```{r}
+
+```
+
 
 2. Comme la `spls()`, la `block.spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la fonction de manière a sélectionner (10 gènes, 9 protéines, 7 miRNA) sur la première composante et (5 gènes, 4 protéines, 3 miRNA) sur la seconde composante.
+```{r}
+
+```
 
 **Question 14:** Quels sont les variables sélectionnées sur la première composante.
+```{r}
+
+```
 
 ## ------- 3. Analyse supervisée : (s)PLS-DA -------------------
 
 Le fichier `sample_groupe.csv` associe un groupe à chaque échantillon.
 
 **Question 15:** Donnez la répartition des groupes.
+```{r}
+
+```
 
 1. Utilisez la `pls.da()` en utilisant les gènes (`X`) et le groupe (`Y`) avec 2 composantes.
+```{r}
+
+```
 
 2. Affichez le graphe des échantillons.
+```{r}
+
+```
 
 **Question 16:** Comparez ce graphe avec le graphe des échantillons obtenu avec l'ACP (1.3). Quel méthode permet d'obtenir de meilleurs clusters?
+```{r}
+
+```
 
 ## ------- 4. Analyse supervisée : block-(s)PLS-DA -------------------
 
 1. Réalisez une multiblock sPLS-DA `block.splsda()` avec les données mRNA, protéines, miRNA `(X = list(mrna, prot, mirna))` et le groupe en incluant 5 composantes `(ncomp = 5)`.
+```{r}
+
+```
 
 2. Utiliser la fonction `perf()` sur le modèle obtenu. 
+```{r}
+
+```
 
 **Question 17:** Quelle serait le nombre de composante minimal à inclure ?
+```{r}
+
+```
 
 3. Relancez le modèle avec 2 composantes et utilisez l'option `keepX` pour sélectionner 15 gènes, protéines et miRNA sur la première compoante et 10 gènes, protéines et miRNA sur la seconde composante.
+```{r}
+
+```
 
 4. Réalisez un *circos plot* avec le modèle obtenu en affichant les corrélations fortes $|\rho| > 0.5$. Ajoutez un titre.
+```{r}
+
+```
 
  -----------------------------------------------------------------------------------------------------------------------------------------------------------
 # =============================================================================
