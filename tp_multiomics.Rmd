@@ -290,18 +290,18 @@ pls_rna_prot
 2. Affichez un *scatter plot* des échantillons en affichant uniquement les composantes 2 et 3.
 Les échantillons doivent être coloriés par groupe. Ajoutez une légende et un titre.
 ```{r}
-plotIndiv(pls_rna_prot,group =  sampl_group$Y, ellipse = TRUE, col = c("red", "blue", "darkgreen"), style = "ggplot2", comp = c(2,3),legend = TRUE, title = 'Individu Scatter plot colored by group, composante 2 and 3')
+plotIndiv(pls_rna_prot,group =  sampl_group$Y, ellipse = TRUE, col = c("red", "blue", "darkgreen"), style = "ggplot2", comp = c(2,3),legend = TRUE, title = 'Individu Scatter plot colored by group, composante 2 and 3', size.title = rel(1.5))
 ```
 
 3. Affichez un *arrow plot* en affichant uniquement les composantes 1 et 3.
 Les flèches doivent être coloriés par groupe. Ajoutez une légende et un titre.
 ```{r}
 plotArrow(pls_rna_prot, comp = c(1,3),
-          group = sampl_group$Y, 
+          group = sampl_group$Y,
           legend = TRUE,
           X.label = "PLS comp1",
           Y.label = "PLS comp3",
-          title = "Arrow plot of mRNA and protein PLS"
+          title = "Arrow plot of mRNA and protein PLS (comp1, comp3)"
           )
 ```
 
@@ -320,6 +320,7 @@ RNA_prot.spls
 #(1 gène, 1 protéine) sur la troisième composante.
 plotLoadings(RNA_prot.spls, comp = 3, title = "spls, comp3", size.name = 0.8)
 ```
+   ----> Les variables sélectionnées sont : le gene "C1QB" et la protéine "Caspase.7_cleavedD198"
 
 5. Affichez un *CIM plot* à partir du modèle *sPLS*.
 ```{r}
@@ -334,14 +335,30 @@ cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)" ,save = 'jpeg'
 #table de correlation
 
 correlation = cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)")$mat.co
+```
+
+```{r}
+most_corr_positive = list()
+most_corr_negative = list()
+
+for (i in range(length(correlation))){
+   if (correlation[i] >= 0.7){
+      most_corr_positive <- c(most_corr_positive, correlation[i])
+   }
+   if (correlation[i] <= -0.7){
+      most_corr_negative <- c(most_corr_negative, correlation[i])
+   }
+}
+most_corr_positive
 correlation
 ```
+   -----> Les plus corrélés sont :  protéine "ER.alpha" avec les genes "ZNF552"(coef = 0.73) et "KDM4B" (coef = 0.77) puis la potéine "GATA3" avec le gene "KDM4B" (coeff  = 0.71). Il s'agit de corrélations positives 
 
 6. Toujours à partir du même modèle *sPLS*, affichez un *network plot* en affichant uniquement les les corrélations les plus forte $(+- 0.65)$.
 ```{r}
-network(RNA_prot.spls, block.var.names = name, cutoff =0.63, save = 'jpeg', name.save = 'sPLSnetwork') #tout le network +++ a affihcer sur la console 
+network(RNA_prot.spls,  cutoff =0.65, save = 'jpeg', name.save = 'sPLSnetwork') 
+#tout le network +++ a affihcer sur la console 
 # se sauvegarde automatique dans le repertiore courant
-
 ```
 
 **Question 13:** Combien de clusters / sous-graphes observés vous ?
@@ -353,13 +370,17 @@ network(RNA_prot.spls, block.var.names = name, cutoff =0.63, save = 'jpeg', name
 
 1. Réalisez une multiblock PLS `pls()` avec les données mRNA, protéines et miRNA `(X = list(mrna, prot), Y = mirna)` en incluant 2 composantes `(ncomp = 2)`.
 ```{r}
-
+pls_rna_prot_mirna =pls(X =as.matrix(mRNA_filtre, prot_filtre) ,Y =miRNA_filtre ,ncomp = 2, scale = T)
+pls_rna_prot_mirna
+# marche pas avec list(mRNA_filtre, prot_filtre)
 ```
 
 
 2. Comme la `spls()`, la `block.spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la fonction de manière a sélectionner (10 gènes, 9 protéines, 7 miRNA) sur la première composante et (5 gènes, 4 protéines, 3 miRNA) sur la seconde composante.
 ```{r}
-
+RNA_prot_miRNA.spls =spls(X= as.matrix(mRNA_filtre, prot_filtre), Y = miRNA, ncomp = 1, 
+                    mode = "regression", scale = TRUE, keepX = c(10,9),keepY = c(7))
+RNA_prot_miRNA.spls
 ```
 
 **Question 14:** Quels sont les variables sélectionnées sur la première composante.
