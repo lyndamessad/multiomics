@@ -450,27 +450,36 @@ La méthode qui permet d'avoir de meilleures clusters est la seconde méthode do
 
 1. Réalisez une multiblock sPLS-DA `block.splsda()` avec les données mRNA, protéines, miRNA `(X = list(mrna, prot, mirna))` et le groupe en incluant 5 composantes `(ncomp = 5)`.
 ```{r}
-
+RNA_prot_miRNA.splsda = block.splsda(X = list(mRNA= mRNA_filtre, protein = prot_filtre, miRNA = miRNA_filtre),  
+                                 Y = sampl_group$Y,
+                                 ncomp = 5)
+RNA_prot_miRNA.splsda
 ```
 
 2. Utiliser la fonction `perf()` sur le modèle obtenu. 
 ```{r}
+RNA_prot_miRNA.splsda.perf = perf(RNA_prot_miRNA.splsda, method.predict = "all", validation = "loo", progressBar = FALSE)
 
+RNA_prot_miRNA.splsda.perf$error.rate
 ```
 
 **Question 17:** Quelle serait le nombre de composante minimal à inclure ?
-```{r}
+Il faudrait 2 composantes minimal
 
-```
 
 3. Relancez le modèle avec 2 composantes et utilisez l'option `keepX` pour sélectionner 15 gènes, protéines et miRNA sur la première compoante et 10 gènes, protéines et miRNA sur la seconde composante.
 ```{r}
-
+RNA_prot_miRNA.splsda = block.splsda(X = list(mRNA= mRNA_filtre, protein = prot_filtre, miRNA = miRNA_filtre),  
+                                 Y = sampl_group$Y,
+                                 ncomp = 2, mode = "regression", scale = TRUE,
+                                 keepX = list(mRNA = c(15,10), protein = c(15,10), miRNA = c(15,10)),
+                                 keepY = 
+                                 )
 ```
 
 4. Réalisez un *circos plot* avec le modèle obtenu en affichant les corrélations fortes $|\rho| > 0.5$. Ajoutez un titre.
 ```{r}
-
+circosPlot(RNA_prot_miRNA.splsda, cutoff=0.5)
 ```
 
  -----------------------------------------------------------------------------------------------------------------------------------------------------------
