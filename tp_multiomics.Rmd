@@ -512,6 +512,8 @@ cibler les bonnes approches multiomiques.
    acquis que l'analyse primaire des données de métabolomiques a déjà été
    complétées et que vous avez déjà accès aux décomptes pour chaque molécules.
 
+# Dans cette analyse, nous avons des données différents pour des mêmes échantillons.
+# La pls serait donc la méthode la plus adaptée car elle va chercher les covariances entres ces différentes données
 
 
 >>>>>>> 0dea4820dfea6cf89dead9a74d37697221872112
