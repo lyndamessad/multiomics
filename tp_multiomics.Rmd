@@ -120,7 +120,7 @@ Ceci confirme donc que les données miRNA et mRNA ont une faible variabilité co
 5. Pour chacun des blocs, filtrez les données les plus variantes :|cv| >= 0.15
 
 ```{r}
-miRNA_filtre = miRNA[,names(which(abs(apply(miRNA, 2, coef_var)) >= 0.15))] ; class(miRNA_filtre)
+miRNA_filtre = miRNA[,names(which(abs(apply(miRNA, 2, coef_var)) >= 0.15))]
 mRNA_filtre = mRNA[, names(which(abs(apply(mRNA, 2, coef_var)) >= 0.15))]
 prot_filtre = prot[, names(which(abs(apply(prot, 2, coef_var)) >=0.15))]
 ```
@@ -350,7 +350,6 @@ correlation = cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)")
 
  
 ```{r}
-
 plotVar(RNA_prot.spls, comp = c(1,3))
 ```
   D'aprés le cercle de correlation : 
@@ -377,16 +376,24 @@ network(RNA_prot.spls,  cutoff =0.65, save = 'jpeg', name.save = 'sPLSnetwork')
 1. Réalisez une multiblock PLS `pls()` avec les données mRNA, protéines et miRNA `(X = list(mrna, prot), Y = mirna)` en incluant 2 composantes `(ncomp = 2)`.
 ```{r}
 
-pls_rna_prot_mirna =block.pls(X =list(mRNA,  prot_filtre) ,Y =miRNA_filtre ,ncomp = 2)
+pls_rna_prot_mirna = block.pls(X =list(mrna= mRNA_filtre, protein = prot_filtre),
+                               Y =as.matrix(as.data.frame(miRNA_filtre)), ncomp = 2)
 pls_rna_prot_mirna
+
 # marche pas avec list(mRNA_filtre, prot_filtre)
 ```
 
 
 2. Comme la `spls()`, la `block.spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la fonction de manière a sélectionner (10 gènes, 9 protéines, 7 miRNA) sur la première composante et (5 gènes, 4 protéines, 3 miRNA) sur la seconde composante.
 ```{r}
-RNA_prot_miRNA.spls =block.spls(X= list(mRNA_filtre, prot_filtre), Y = miRNA, ncomp = 1, 
-                    mode = "regression", scale = TRUE, keepX = c(10,9),keepY = c(7))
+list.keepX = list(mRNA = c(10,5), protein = c(9,4))
+
+RNA_prot_miRNA.spls = block.spls(X = list(mRNA= mRNA_filtre, protein = prot_filtre),  
+                                 Y = as.matrix(as.data.frame(miRNA=miRNA_filtre)),
+                                 ncomp = 2, mode = "regression", scale = TRUE,
+                                 keepX = list.keepX,
+                                 keepY = list(miRNA= c(7,3))
+                                 )
 RNA_prot_miRNA.spls
 ```
 
