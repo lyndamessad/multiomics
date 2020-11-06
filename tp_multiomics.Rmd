@@ -501,6 +501,9 @@ cibler les bonnes approches multiomiques.
    transcriptomiques provenant d'une vingtaine de trios (une mère et sa portée
    de deux enfants) ainsi qu'à diverses mesures cliniques numériques pour tous
    les échantillons.
+   
+# Dans ce contexte on cherche une relation entre l'exposition de polluants et la santé des ours polaires.
+# On effectuerait donc une analyse multivariée de type PCA afin d'observer une éventuelle corrélation entre les deux.
 
 2. Vous travaillez sur un modèle murin et vous souhaitez comprendre les impacts
    d'un traitement sur le microbiote. Vous avez accès à des données de
@@ -508,4 +511,7 @@ cibler les bonnes approches multiomiques.
    souris traitées et pour des souris non-traitées. Vous pouvez prendre pour
    acquis que l'analyse primaire des données de métabolomiques a déjà été
    complétées et que vous avez déjà accès aux décomptes pour chaque molécules.
+
+
+
 >>>>>>> 0dea4820dfea6cf89dead9a74d37697221872112
