@@ -135,7 +135,7 @@ dim(prot_filtre)
 Aprés filtrage des |cv| > 0.15, on trouve:
   a. miRNA :avant filtrage: 184, aprés filtrage 82 miRNA.
   b. mRNA :  avant filtrage : 200, aprés filtrage 174 genes
-  c. proteines: avant filtrage : 142,aprés filtrage 8 142 protéines.
+  c. proteines: avant filtrage : 142,aprés filtrage 142 protéines.
   
 On conclu donc que pour les protéines toutes les variables on un |cv| > 0.15.
 
