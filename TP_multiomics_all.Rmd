@@ -507,11 +507,11 @@ cibler les bonnes approches multiomiques.
    
    ---------------------------------------------------------
    Dans ce contexte on cherche une relation entre l'exposition de polluants et la santé des ours polaires.
-Les données reçus sont des données de Transcriptomique qui représentent donc l'ensemble des ARN messagers produits lors du processus de transcription du génome des ours polaires. Ceci repose sur la quantification systématique de ces ARNm, ce qui permet d'avoir une indication relative du taux de transcription de différents gènes dans des conditions données. Il est donc primordial controler la qualité de nos données(séquences)
+Les données reçues sont des données de Transcriptomique qui représentent donc l'ensemble des ARN messagers produits lors du processus de transcription du génome des ours polaires. Ceci repose sur la quantification systématique de ces ARNm, ce qui permet d'avoir une indication relative du taux de transcription de différents gènes dans des conditions données. Il est donc primordial controler la qualité de nos données(séquences)
 
-   Dans un premier temps, on procede à une analyse multivariée de type PCA. On  voudrais identifier les principales sources de variation des données et déterminer si ces sources de variation correspondent à des conditions biologiques ou à un biais expérimental. Ceci va nous permettre de visualiser les relations ou les schémas entre les échantillons, s'ils se regroupent "naturellement" en fonction de conditions biologiques connues. La suite de l'analyse va dependre de l'allure de nos PCA. 
+   Dans un premier temps, on procède à une analyse multivariée de type PCA. On voudrait identifier les principales sources de variation des données et déterminer si ces sources de variation correspondent à des conditions biologiques ou à un biais expérimental. Ceci va nous permettre de visualiser les relations ou les schémas entre les échantillons, s'ils se regroupent "naturellement" en fonction de conditions biologiques connues. La suite de l'analyse va dependre de l'allure de nos PCA. 
 
-   Dans un second temps, on va s'interesser à l'existance de correlation entre les différentes variables(mesures cliniques) dans les différents échantillons. un simple circle plot de la PCA nous permettrai de voir cette correlation si elle existe. 
+   Dans un second temps, on va s'interesser à l'existance de corrélation entre les différentes variables(mesures cliniques) dans les différents échantillons. un simple circle plot de la PCA nous permettrai de voir cette correlation si elle existe. 
 
 Ceci peut toujours etre accompagner par des études statistiques des variables numériques(moyenne, max, min etc) et leurs représentations graphiques(volcano plot ou autres). 
 
@@ -527,10 +527,10 @@ En plus, une pls-DA  qui s'applique parfaitement aux données transcriptomiques,
    complétées et que vous avez déjà accès aux décomptes pour chaque molécules.
 
    ---------------------------------------------------------
-   Dans le cas de cet étude, on a à disposition des données de séquençage de type 16 ainsi que des données de métabolomiques(décompte pour chaque nucléotide). 
+   Dans le cas de cet étude, on a à disposition des données de séquençage de type 16S ainsi que des données de métabolomiques(décompte pour chaque nucléotide). 
    
-   Comme pour les purs polaires, on peut commencer par une PCA afin de voir la distribution des données métabolomique selon la PCA. 
-   Ensuite, on peut s'appuyer sur une PLS.Elle s'applique sur les  deux ensembles de données étabolomiques et les especes bactériennes issues des données de séquençage. Ceci va permettre d'extraire des informations sur les données  corrélées et mettre en évidence les points communs entre les ensembles de données.
+   Comme pour les ours polaires, on peut commencer par une PCA afin de voir la distribution des données métabolomique selon la PCA. 
+   Ensuite, on peut s'appuyer sur une PLS. Elle s'applique sur les  deux ensembles de données étabolomiques et les espèces bactériennes issues des données de séquençage. Ceci va permettre d'extraire des informations sur les données  corrélées et mettre en évidence les points communs entre les ensembles de données.
    
    Selon nos résultats, on pourrais  utiliser la méthode de multiblock pour  identifier l'existance d'une signature multi-omique  
 
