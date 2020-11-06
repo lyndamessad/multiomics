@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ---
 title: "tp_multi-omics"
 author: "Lynda, Laetitia et Zachary"
@@ -41,7 +40,6 @@ De l'aide est disponible sur leur site (http://mixomics.org/).
 1. Chargez le package `mixOmics`
 ```{r}
 library("mixOmics")
-
 ```
 
 2. Téléchargez et importez les données (4 fichiers: `mirna.csv`, `mrna.csv`, `protein.csv`, `sample_group.csv`)
@@ -52,13 +50,10 @@ Lecture des fichier:
 ```{r}
 miRNA <- read.csv(file = "mirna.csv", header = T, sep ="," ,row.names = 1)
 dim(miRNA)
-
 mRNA <- read.csv(file = "mrna.csv", header = T, sep =",", row.names = 1 )
 dim(mRNA)
-
 prot <- read.csv(file = "protein.csv", header = T, sep =",", row.names = 1 )
 dim(prot)
-
 sampl_group <- read.csv(file = "sample_group.csv", header = T, sep ="," ,row.names = 1)
 dim(sampl_group)
 ```
@@ -129,15 +124,15 @@ prot_filtre = prot[, names(which(abs(apply(prot, 2, coef_var)) >=0.15))]
 ```{r}
 dim(miRNA_filtre)
 dim(mRNA_filtre)
-length(prot_filtre)
+dim(prot_filtre)
 ```
 
 Aprés filtrage des |cv| > 0.15, on trouve:
   a. miRNA :avant filtrage: 184, aprés filtrage 82 miRNA.
   b. mRNA :  avant filtrage : 200, aprés filtrage 174 genes
-  c. proteines: avant filtrage : 142,aprés filtrage 8 142 protéines.
+  c. proteines: avant filtrage : 142,aprés filtrage 142 protéines.
   
-On conclu donc que pour les protéines toutes les variables on un |cv| > 0.15.
+On conclut donc que pour les protéines toutes les variables on un |cv| > 0.15.
 
 
 **Question 4:** Quel est le gène le plus variant ? La protéine associé à ce gène est-elle présente dans le jeu de donnée.
@@ -168,9 +163,10 @@ Sur le chromosome 2
 
 # • Quelle est la longueur en nucléotide de sa séquence ?
  -->  30 316 nucléotides  
+
 # • Quelle est la longueur en acides aminés de la protéine associée (ou des isoformes) ?
- 
  -->  762 amino acides
+
 
  -----------------------------------------------------------------------------------------------------------------------------------------------------------
 # ===========================================================
@@ -182,9 +178,9 @@ Sur le chromosome 2
 
 **Question 6:** A quoi sert l'Analyse en Composante Principale ? Expliquez brievement sont fonctionnement ?
 
-L’ analyse en composantes principales (ACP) , ou principal component analysis (PCA) en anglais, est une méthode statistique qui permet d’analyser et de visualiser un jeu de données a condition que celui-ci présente des variables quantitatives qui le decrive.
+L’analyse en composantes principales (ACP), ou principal component analysis (PCA) en anglais, est une méthode statistique qui permet d’analyser et de visualiser un jeu de données a condition que celui-ci présente des variables quantitatives qui le decrive.
 
-Cette méthode est beaucoup utilitée pour des données multivariées. Cependant, les données doivent etre normalisées pour éviter que le résultat ne soit fausser par le poids d'une variables tres abondante par rapport aux autres variables.
+Cette méthode est beaucoup utilitée pour des données multivariées. Cependant, les données doivent être normalisées pour éviter que le résultat ne soit faussé par le poids d'une variable très abondante par rapport aux autres variables.
 
 
 1. Réaliser l'ACP sur les données mRNA.
@@ -203,19 +199,17 @@ mRNA_pca = pca(mRNA_filtre, scale = TRUE,  ncomp = 20)
 ```{r}
 mRNA_pca$cum.var
 plot(mRNA_pca)
-
 ```
 
 Si on fixe un seuil à 50% de représentation des données. On s'arrete à la 6eme dimension.
 justification: 
 -------------
-Les composants de la pca représentent les données de façon decroissante. En effet, les données sont représenté pour la majorité 
-par le CP1, puis la CP2 améliore la représentation ainsi de suite jusqu'à atteindre une représentation de 100% des données.
+Les composants de la PCA représentent les données de façon décroissante. En effet, les données sont représentées pour la majorité par le CP1, puis la CP2 améliore la représentation ainsi de suite jusqu'à atteindre une représentation de 100% des données.
 
 Dans notre PCA, le seuil de 50% est atteint au bout de la CP6 (6eme dimension). 
 Un seuil de 70% est atteint au bout de la CP18.
 
-Pour la suite du TP, on choisis dans un premier lieu le seuil de 50% de la représentation des données.
+Pour la suite du TP, on choisit dans un premier lieu le seuil de 50% de la représentation des données.
 Si le résultat n'est pas satisfaisant, on passera alors à un seuil de 70% de la représentation des données.
 
 
@@ -224,9 +218,7 @@ Si le résultat n'est pas satisfaisant, on passera alors à un seuil de 70% de l
 ```{r}
 # pour 50%  ----> dimension = 6
 mRNA_pca = pca(mRNA_filtre, scale = TRUE, ncomp = 6)
-
 plotIndiv(mRNA_pca, col = "blue", title = 'Representation graphique de la PCA (ncomp = 6)')
-
 ```
 
 
@@ -234,17 +226,11 @@ plotIndiv(mRNA_pca, col = "blue", title = 'Representation graphique de la PCA (n
 ```{r}
 spca.result <- spca(mRNA_filtre, ncomp = 1, center = TRUE, scale = TRUE)
 #
-
 selectVar(spca.result, comp = 1)$value #valeurs
-
 selectVar(spca.result, comp = 1)$name #noms
-
 dim1_var = selectVar(spca.result, comp = 1)$name[which((selectVar(spca.result, comp = 1)$value) > 0)]
 dim1_var
-
 plotLoadings(mRNA_pca, ndisplay =30)
-
-
 ```
 
 On a 99 variables qui contribuent le plus à l'axe 1. 
@@ -252,8 +238,8 @@ On a 99 variables qui contribuent le plus à l'axe 1.
 
 La figure "loading on comp 1 " montre les 30 premieres varables et leur contribution.   
 
-Ceux qui contribuent le plus est le gene "ZNF552"(value.var: 0.1371904005), puis "C4orf34" (value.var :0.1371892255).
-celui qui contribu le moin est le gene "MXI1"(value.var: 0.0001037394)
+Ceux qui contribuent le plus sont le gene "ZNF552"(value.var: 0.1371904005), puis "C4orf34" (value.var :0.1371892255).
+Celui qui contribue le moins est le gene "MXI1"(value.var: 0.0001037394)
 
 
 3. Avec un graphique, représenter les échantillons dans l'espace formé par les composantes. 
@@ -268,8 +254,6 @@ plotIndiv(mRNA_pca, group = sampl_group$Y,
 ```{r}
 spca.result <- spca(mRNA_filtre, ncomp = 2, center = TRUE, scale = TRUE, 
                     keepX = c(10, 5))
-
-
 ```
 
 
@@ -295,7 +279,13 @@ pls_rna_prot
 ```
 
 **Question 10:** A quoi sert la régression PLS pour l'intégration multi-omique?
-****************************
+La PLS permet de maximiser la covariance entre 2 jeux de données
+Cette méthode est recommandé quand un nombre important de descripteurs est utilisé ou
+quand de fortes colinéarités entre les variables sont présentes.
+Elle permet une prise en compte de la multicolinéarité, une gestion de tableaux écrasés,
+la possibilité d'avoir plus d'une variable dépendante et enfin traite les données manquantes.
+
+
 2. Affichez un *scatter plot* des échantillons en affichant uniquement les composantes 2 et 3.
 Les échantillons doivent être coloriés par groupe. Ajoutez une légende et un titre.
 ```{r}
@@ -337,7 +327,6 @@ plotLoadings(RNA_prot.spls, comp = 3, title = "spls, comp3", size.name = 0.8)
 5. Affichez un *CIM plot* à partir du modèle *sPLS*.
 ```{r}
 # se sauvegarde automatique dans le repertiore courant
-
 cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)" ,save = 'jpeg', name.save = 'sPLScim')  
 #Si non  a exécuter  sur la console, soucis de marges
 ```
@@ -345,7 +334,6 @@ cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)" ,save = 'jpeg'
 **Question 12:** Quels sont les gènes et les protéines les plus corrélés? Justifiez à partir de la matrice de corrélation calculée par `cim()`.
 ```{r}
 #table de correlation
-
 correlation = cim(RNA_prot.spls, title = "CIM Plot of spls (mRNA and proteine)")$mat.co
 ```
 
@@ -357,10 +345,10 @@ plotVar(RNA_prot.spls, comp = c(1,3))
   
 Selon la comp1:  On a identifié 2 clusters: 
 
-         ----> une correlation positive par exemple entre : "KDM4B", "ER.alpha", "GATA3" , "ZNF552" et "INPP4B".
-         ----> une correlation negative par exemple entre : "SLC43A3", "Cyclin_B1", "Cyclin_E1", "FMNL2"  et "CCNA2".
+         ----> une corrélation positive par exemple entre : "KDM4B", "ER.alpha", "GATA3" , "ZNF552" et "INPP4B".
+         ----> une corrélation négative par exemple entre : "SLC43A3", "Cyclin_B1", "Cyclin_E1", "FMNL2"  et "CCNA2".
 
-6. Toujours à partir du même modèle *sPLS*, affichez un *network plot* en affichant uniquement les les corrélations les plus forte $(+- 0.65)$.
+6. Toujours à partir du même modèle *sPLS*, affichez un *network plot* en affichant uniquement les corrélations les plus forte $(+- 0.65)$.
 ```{r}
 network(RNA_prot.spls,  cutoff =0.65, save = 'jpeg', name.save = 'sPLSnetwork') 
 #tout le network +++ a affihcer sur la console 
@@ -368,26 +356,22 @@ network(RNA_prot.spls,  cutoff =0.65, save = 'jpeg', name.save = 'sPLSnetwork')
 ```
 
 **Question 13:** Combien de clusters / sous-graphes observés vous ?
-```{r}
-# pour moi on a deux cluster (voir les couleurs, rouge et noire)
-```
+
+Nous observons avec le cercle de corrélation 3 groupes distincts ce qui est confirmé par le network plot où 3 couleurs sont affichés entre les gènes et protéines (rouge clair, rouge foncé, noir)
 
 ## ------- 2. *multiblock* Projection on Latent Structures -------------------
 
 1. Réalisez une multiblock PLS `pls()` avec les données mRNA, protéines et miRNA `(X = list(mrna, prot), Y = mirna)` en incluant 2 composantes `(ncomp = 2)`.
 ```{r}
-
 pls_rna_prot_mirna = block.pls(X =list(mrna= mRNA_filtre, protein = prot_filtre),
                                Y =as.matrix(as.data.frame(miRNA_filtre)), ncomp = 2)
 pls_rna_prot_mirna
-
 # marche pas avec list(mRNA_filtre, prot_filtre)
 ```
 
 
 2. Comme la `spls()`, la `block.spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la fonction de manière a sélectionner (10 gènes, 9 protéines, 7 miRNA) sur la première composante et (5 gènes, 4 protéines, 3 miRNA) sur la seconde composante.
 ```{r}
-
 RNA_prot_miRNA.spls = block.spls(X = list(mRNA= mRNA_filtre, protein = prot_filtre),  
                                  Y = as.matrix(as.data.frame(miRNA_filtre)),
                                  ncomp = 2, mode = "regression", scale = TRUE,
@@ -400,7 +384,6 @@ RNA_prot_miRNA.spls
 **Question 14:** Quels sont les variables sélectionnées sur la première composante.
 ```{r}
 plotLoadings(RNA_prot_miRNA.spls , comp = 1, title = "block.spls, comp1", size.name = 1.2)
-
 ```
 
 ## ------- 3. Analyse supervisée : (s)PLS-DA -------------------
@@ -429,44 +412,50 @@ plotIndiv(plsda_gene, col = c("red","blue", "darkgreen"), legend = T, ellipse = 
 plotIndiv(mRNA_pca, group = sampl_group$Y, ind.names= F,
           legend = TRUE, title = 'Figure1: Plot echantillon PCA by Group',
           ellipse = TRUE, col = c("red", "blue", "darkgreen"))
-
 # Methode 2 plsda
 plotIndiv(plsda_gene, col = c("red","blue", "darkgreen"), legend = T, ellipse = T,
           title = "Figure2: Plot echantillons plsda", ind.names= F)
-
 ```
 La comparaison des deux méthodes : PCA (figure1) et plsda (figure2):
 la figure 2 montre une représentation plus nette et un moins de chevauchement entre les groupes. 
 Contrairement à la figure 1 où il est plus difficle de séparer entre les 3 groupes.
 
-La méthode qui permet d'avoir de meilleures cluster est la seconde méthode donc la plsda.
+La méthode qui permet d'avoir de meilleures clusters est la seconde méthode donc la plsda.
 
 
    ## ------- 4. Analyse supervisée : block-(s)PLS-DA ---------------------------------------------------------------------------------------------
 
 1. Réalisez une multiblock sPLS-DA `block.splsda()` avec les données mRNA, protéines, miRNA `(X = list(mrna, prot, mirna))` et le groupe en incluant 5 composantes `(ncomp = 5)`.
 ```{r}
-
+RNA_prot_miRNA.splsda = block.splsda(X = list(mRNA= mRNA_filtre, protein = prot_filtre, miRNA = miRNA_filtre),  
+                                 Y = sampl_group$Y,
+                                 ncomp = 5)
+RNA_prot_miRNA.splsda
 ```
 
 2. Utiliser la fonction `perf()` sur le modèle obtenu. 
 ```{r}
-
+RNA_prot_miRNA.splsda.perf = perf(RNA_prot_miRNA.splsda, method.predict = "all", validation = "loo", progressBar = FALSE)
+RNA_prot_miRNA.splsda.perf$error.rate
 ```
 
 **Question 17:** Quelle serait le nombre de composante minimal à inclure ?
-```{r}
+Il faudrait 2 composantes minimal
 
-```
 
 3. Relancez le modèle avec 2 composantes et utilisez l'option `keepX` pour sélectionner 15 gènes, protéines et miRNA sur la première compoante et 10 gènes, protéines et miRNA sur la seconde composante.
 ```{r}
-
+RNA_prot_miRNA.splsda = block.splsda(X = list(mRNA= mRNA_filtre, protein = prot_filtre, miRNA = miRNA_filtre),  
+                                    Y = sampl_group$Y,
+                                    ncomp = 2, mode = "regression", scale = TRUE,
+                                    keepX = list(mRNA = c(15,10), protein = c(15,10), miRNA = c(15,10)),
+                                    )
+RNA_prot_miRNA.splsda
 ```
 
 4. Réalisez un *circos plot* avec le modèle obtenu en affichant les corrélations fortes $|\rho| > 0.5$. Ajoutez un titre.
 ```{r}
-
+circosPlot(RNA_prot_miRNA.splsda, cutoff=abs(0.5), line = T, legend = T)
 ```
 
  -----------------------------------------------------------------------------------------------------------------------------------------------------------
