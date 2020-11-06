@@ -2,7 +2,10 @@
 <<<<<<< HEAD
 ---
 title: "tp_multi-omics"
-author: "Lynda, Laetitia et Zachary"
+author: "Lynda MESSAD DIT MAHTAL  M2BI"
+        "Laetitia HOLLIER         M2BI"
+        "Zachary ALLOUCHE        M2IPFB"
+   
 date: "20/10/2020"
 output: html_document
 ---
