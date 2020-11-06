@@ -389,10 +389,10 @@ pls_rna_prot_mirna
 list.keepX = list(mRNA = c(10,5), protein = c(9,4))
 
 RNA_prot_miRNA.spls = block.spls(X = list(mRNA= mRNA_filtre, protein = prot_filtre),  
-                                 Y = as.matrix(as.data.frame(miRNA=miRNA_filtre)),
+                                 Y = as.matrix(as.data.frame(miRNA_filtre)),
                                  ncomp = 2, mode = "regression", scale = TRUE,
                                  keepX = list.keepX,
-                                 keepY = list(miRNA= c(7,3))
+                                 keepY = c(7,3)
                                  )
 RNA_prot_miRNA.spls
 ```
