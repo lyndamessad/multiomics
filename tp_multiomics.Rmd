@@ -129,7 +129,7 @@ prot_filtre = prot[, names(which(abs(apply(prot, 2, coef_var)) >=0.15))]
 ```{r}
 dim(miRNA_filtre)
 dim(mRNA_filtre)
-length(prot_filtre)
+dim(prot_filtre)
 ```
 
 Aprés filtrage des |cv| > 0.15, on trouve:
