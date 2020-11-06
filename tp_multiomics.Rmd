@@ -102,11 +102,12 @@ hist(vec_prot, col = "red")
 Si oui, quel type de donnée possède le plus de variabilité ?
 
 D'après les représentations des histogrammes, on peut constater que selon les blocs, la distribution n'est pas la même.
-les données de miRNA et mRNA ont toutes les deux un maximum de données avec un coefficient de variation entre 0.5 et 1. 
+les données mRNA ont un maximum de données avec un coefficient de variation entre 0.5 et 1.  comparé aux données de miRNA donc
+le maximum de variation est entre 0.15 et 0.2. 
 Par contre, les données protéines ne suit pas le meme principe. 
 
 a. Pour les miRNA, on a une abondance plus importante des coeffcients de variation qui entre 0.05 et 0.1. 
-b. Pour les mRNA, les coeffcients de variation entre 0.05 et 0.1 sont les plus abondants.
+b. Pour les mRNA, les coeffcients de variation entre 0.15 et 0.2 sont les plus abondants.
 c. Pour les protéines, les coeffcients de variation entre 0 et 50 sont les plus abondants. 
 .
 ```{r}
@@ -386,12 +387,11 @@ pls_rna_prot_mirna
 
 2. Comme la `spls()`, la `block.spls()` implémente une étape de *feature selection*. En utilisant la documentation de la fonction et/ou l'aide disponible en ligne,  utilisez la fonction de manière a sélectionner (10 gènes, 9 protéines, 7 miRNA) sur la première composante et (5 gènes, 4 protéines, 3 miRNA) sur la seconde composante.
 ```{r}
-list.keepX = list(mRNA = c(10,5), protein = c(9,4))
 
 RNA_prot_miRNA.spls = block.spls(X = list(mRNA= mRNA_filtre, protein = prot_filtre),  
                                  Y = as.matrix(as.data.frame(miRNA_filtre)),
                                  ncomp = 2, mode = "regression", scale = TRUE,
-                                 keepX = list.keepX,
+                                 keepX = list(mRNA = c(10,5), protein = c(9,4)),
                                  keepY = c(7,3)
                                  )
 RNA_prot_miRNA.spls
@@ -399,6 +399,7 @@ RNA_prot_miRNA.spls
 
 **Question 14:** Quels sont les variables sélectionnées sur la première composante.
 ```{r}
+plotLoadings(RNA_prot_miRNA.spls , comp = 1, title = "block.spls, comp1", size.name = 1.2)
 
 ```
 
